@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>บทที่ 2 | โครงสร้างและตรรกะของ S&OP — 5772611</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Taviraj:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --indigo:#232359; --indigo-2:#33337a; --indigo-3:#4a4aa0;
+  --gold:#c9962e; --gold-soft:#f3e3bd; --gold-pale:#fbf5e6;
+  --teal:#0f766e; --teal-soft:#d3ece9;
+  --paper:#f7f5f0; --card:#ffffff; --ink:#26263a; --muted:#6b6b82;
+  --line:#e6e2d8; --danger:#b3413a; --ok:#2f7d4f; --warn:#a4700f;
+  --radius:14px; --shadow:0 2px 10px rgba(35,35,89,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Sarabun',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-size:16px}
+h1,h2,h3{font-family:'Taviraj',serif}
+button,input,select{font-family:'Sarabun',sans-serif}
+
+header{background:linear-gradient(135deg,var(--indigo) 0%,var(--indigo-2) 60%,#3d2f6e 100%);color:#fff;padding:34px 20px 30px;position:relative;overflow:hidden}
+header::after{content:"";position:absolute;right:-70px;top:-70px;width:280px;height:280px;border-radius:50%;border:34px solid rgba(201,150,46,.18)}
+header::before{content:"";position:absolute;right:90px;bottom:-110px;width:220px;height:220px;border-radius:50%;border:26px solid rgba(15,118,110,.22)}
+.hwrap{max-width:1060px;margin:0 auto;position:relative;z-index:1}
+.eyebrow{font-size:.82rem;letter-spacing:.14em;color:var(--gold-soft);text-transform:uppercase;font-weight:600}
+header h1{font-size:clamp(1.5rem,3.4vw,2.2rem);font-weight:600;margin:.35rem 0 .3rem}
+header p.sub{color:#d8d8ee;max-width:780px;font-weight:300}
+.hmeta{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);padding:3px 12px;border-radius:99px;font-size:.8rem}
+
+nav{position:sticky;top:0;z-index:50;background:#fffdf8;border-bottom:1px solid var(--line);box-shadow:0 2px 8px rgba(35,35,89,.06)}
+.nwrap{max-width:1060px;margin:0 auto;display:flex;overflow-x:auto;gap:2px;padding:0 12px}
+.nwrap::-webkit-scrollbar{height:0}
+.tab{border:none;background:none;padding:13px 14px 11px;font-size:.9rem;font-weight:500;color:var(--muted);cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:.18s}
+.tab:hover{color:var(--indigo)}
+.tab.active{color:var(--indigo);border-bottom-color:var(--gold);font-weight:600}
+.tab:focus-visible{outline:2px solid var(--teal);outline-offset:-2px}
+
+main{max-width:1060px;margin:0 auto;padding:28px 18px 70px}
+section.panel{display:none;animation:fadein .3s ease}
+section.panel.show{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.sec-title{font-size:1.45rem;color:var(--indigo);font-weight:600;margin-bottom:4px}
+.sec-sub{color:var(--muted);margin-bottom:20px;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;margin-bottom:18px}
+.card h3{color:var(--indigo);font-size:1.08rem;margin-bottom:10px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+
+.callout{border-left:4px solid var(--gold);background:var(--gold-pale);border-radius:0 10px 10px 0;padding:14px 18px;margin:16px 0;font-size:.95rem}
+.callout b{color:var(--indigo)}
+.callout.teal{border-left-color:var(--teal);background:var(--teal-soft)}
+
+table{width:100%;border-collapse:collapse;font-size:.9rem;background:#fff}
+th{background:var(--indigo);color:#fff;font-weight:600;padding:9px 10px;text-align:left}
+td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:nth-child(even) td{background:#fbfaf6}
+
+.badge{display:inline-block;padding:2px 10px;border-radius:99px;font-size:.75rem;font-weight:600}
+.b-ok{background:#edf7f0;color:var(--ok)}
+.b-warn{background:var(--gold-pale);color:var(--warn)}
+.b-bad{background:#fdeaea;color:var(--danger)}
+
+.obj{display:flex;gap:14px;align-items:flex-start;padding:12px 4px;border-bottom:1px dashed var(--line)}
+.obj:last-child{border-bottom:none}
+.obj .n{flex:0 0 40px;height:40px;border-radius:50%;background:var(--indigo);color:var(--gold-soft);font-family:'Taviraj',serif;font-weight:600;display:flex;align-items:center;justify-content:center}
+.kwds{display:flex;flex-wrap:wrap;gap:8px}
+.kwds span{background:#fff;border:1px solid var(--line);border-radius:8px;padding:4px 12px;font-size:.83rem;color:var(--indigo-2)}
+
+/* hierarchy stairs */
+.stairs{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.stair{border:none;text-align:left;display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 16px;cursor:pointer;transition:.2s;font-size:.95rem}
+.stair:hover{border-color:var(--gold);transform:translateX(4px)}
+.stair.active{background:var(--indigo);color:#fff;border-color:var(--indigo)}
+.stair.active .st-time{color:var(--gold-soft)}
+.stair .st-lv{flex:0 0 34px;height:34px;border-radius:8px;background:var(--gold-pale);color:var(--indigo);font-family:'Taviraj',serif;font-weight:700;display:flex;align-items:center;justify-content:center}
+.stair.active .st-lv{background:var(--gold);color:var(--indigo)}
+.stair .st-nm{font-weight:600;flex:1}
+.stair .st-time{font-size:.82rem;color:var(--muted)}
+.stair:nth-child(1){margin-right:32%}
+.stair:nth-child(2){margin-right:24%;margin-left:8%}
+.stair:nth-child(3){margin-right:16%;margin-left:16%}
+.stair:nth-child(4){margin-right:8%;margin-left:24%}
+.stair:nth-child(5){margin-left:32%}
+@media(max-width:680px){.stair{margin:0 !important}}
+.st-detail{background:#fff;border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:10px;padding:18px 20px}
+
+/* flow chips (disaggregation) */
+.flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:10px 0}
+.flow .fbox{background:var(--indigo);color:#fff;border-radius:9px;padding:7px 14px;font-size:.85rem;font-weight:600}
+.flow .fbox.alt{background:var(--teal)}
+.flow .arr{color:var(--gold);font-weight:700}
+
+/* cycle stepper */
+.cycle{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.cstep{flex:1 1 160px;border:none;background:#fff;border:2px solid var(--line);border-radius:12px;padding:14px 10px;cursor:pointer;text-align:center;transition:.2s;position:relative}
+.cstep:hover{border-color:var(--gold);transform:translateY(-2px)}
+.cstep.active{border-color:var(--indigo);background:var(--indigo);color:#fff}
+.cstep.active .cs-wk{color:var(--gold-soft)}
+.cstep .cs-n{width:34px;height:34px;border-radius:50%;background:var(--gold-pale);color:var(--indigo);font-family:'Taviraj',serif;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 6px}
+.cstep.active .cs-n{background:var(--gold)}
+.cstep .cs-nm{font-weight:600;font-size:.86rem;line-height:1.35}
+.cstep .cs-wk{font-size:.75rem;color:var(--muted);margin-top:3px}
+.cs-detail{background:#fff;border:1px solid var(--line);border-top:4px solid var(--gold);border-radius:0 0 var(--radius) var(--radius);padding:20px 22px}
+.cs-detail h4{font-family:'Taviraj',serif;color:var(--indigo);font-size:1.12rem;margin-bottom:8px}
+.tagline{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.tagline span{background:var(--teal-soft);color:var(--teal);border-radius:8px;padding:3px 11px;font-size:.8rem;font-weight:600}
+
+/* calculators */
+.calc label{display:block;font-size:.85rem;font-weight:600;color:var(--indigo);margin-bottom:3px}
+.calc input[type=number]{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:.95rem;background:#fbfaf6}
+.calc input[type=number]:focus{outline:2px solid var(--teal);border-color:var(--teal)}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:14px}
+.btn{background:var(--indigo);color:#fff;border:none;border-radius:10px;padding:11px 26px;font-size:.95rem;font-weight:600;cursor:pointer;transition:.2s}
+.btn:hover{background:var(--indigo-2);transform:translateY(-1px)}
+.btn.gold{background:var(--gold);color:var(--indigo)}
+.btn.ghost{background:#fff;color:var(--indigo);border:1px solid var(--indigo)}
+.result{display:none;margin-top:16px;border:2px solid var(--gold);border-radius:12px;padding:18px;background:#fffdf6}
+.result.show{display:block;animation:fadein .3s ease}
+.rbig{font-family:'Taviraj',serif;font-size:1.4rem;font-weight:700;color:var(--indigo)}
+.inv-table input{width:84px;padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:#fff;font-size:.88rem}
+.inv-table td,.inv-table th{text-align:center}
+.chart{margin-top:14px;overflow-x:auto}
+
+/* matching */
+.match-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:640px){.match-wrap{grid-template-columns:1fr}}
+.mcol h4{font-size:.92rem;color:var(--muted);font-weight:600;margin-bottom:8px}
+.mitem{width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:8px;cursor:pointer;font-size:.88rem;transition:.15s}
+.mitem:hover{border-color:var(--gold)}
+.mitem.sel{border-color:var(--indigo);background:var(--gold-pale)}
+.mitem.done{border-color:var(--ok);background:#edf7f0;color:var(--ok);cursor:default;font-weight:600}
+.mitem.wrong{border-color:var(--danger);background:#fdeeee;animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.mstat{font-size:.9rem;color:var(--muted);margin-top:6px}
+
+/* org size selector */
+.orgsel{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.orgsel button{flex:1 1 150px;border:2px solid var(--line);background:#fff;border-radius:10px;padding:10px;cursor:pointer;font-size:.88rem;font-weight:600;color:var(--indigo);transition:.15s}
+.orgsel button:hover{border-color:var(--gold)}
+.orgsel button.active{background:var(--indigo);color:#fff;border-color:var(--indigo)}
+
+/* quiz */
+.q{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.q .qt{font-weight:600;color:var(--indigo);margin-bottom:12px}
+.q .qo{display:block;width:100%;text-align:left;background:#fbfaf6;border:2px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:8px;cursor:pointer;font-size:.9rem;transition:.15s}
+.q .qo:hover:not(:disabled){border-color:var(--gold)}
+.q .qo.correct{border-color:var(--ok);background:#edf7f0;font-weight:600}
+.q .qo.incorrect{border-color:var(--danger);background:#fdeeee}
+.q .fb{display:none;margin-top:8px;font-size:.88rem;padding:10px 14px;border-radius:8px}
+.q .fb.show{display:block}
+.q .fb.good{background:#edf7f0;color:var(--ok)}
+.q .fb.bad{background:#fdeeee;color:var(--danger)}
+.score-box{background:var(--indigo);color:#fff;border-radius:var(--radius);padding:22px;text-align:center;display:none}
+.score-box.show{display:block}
+.score-box .big{font-family:'Taviraj',serif;font-size:2.2rem;color:var(--gold-soft);font-weight:700}
+
+footer{border-top:1px solid var(--line);background:#fffdf8;padding:22px 18px;text-align:center;color:var(--muted);font-size:.83rem}
+.eq{background:var(--indigo);color:#fff;border-radius:12px;padding:16px 20px;text-align:center;font-family:'Taviraj',serif;font-size:1.05rem;margin:14px 0}
+.eq b{color:var(--gold-soft)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hwrap">
+    <div class="eyebrow">รายวิชา 5772611 การวางแผนการขายและการดำเนินการ · 3(2-2-5)</div>
+    <h1>บทที่ 2 โครงสร้างและตรรกะของการวางแผนการขายและการดำเนินการ</h1>
+    <p class="sub">Structure and Logic of Sales and Operations Planning — S&OP ทำงานอย่างไรในทางปฏิบัติ: โครงสร้าง วงจรรายเดือน 5 ขั้นตอน ตรรกะ Demand–Supply ผู้เกี่ยวข้อง และระบบเอกสาร</p>
+    <div class="hmeta">
+      <span class="chip">สาขาวิชาการจัดการโลจิสติกส์และซัพพลายเชน</span>
+      <span class="chip">Bloom's Taxonomy: L2 Understand – L4 Analyze</span>
+      <span class="chip">แกนกลางของรายวิชา — เชื่อมบทที่ 1 สู่เครื่องมือเชิงเทคนิค</span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="nwrap" role="tablist">
+    <button class="tab active" data-p="p0">ภาพรวมบท</button>
+    <button class="tab" data-p="p1">โครงสร้างการวางแผน</button>
+    <button class="tab" data-p="p2">วงจร S&OP 5 ขั้นตอน</button>
+    <button class="tab" data-p="p3">ตรรกะ Demand–Supply</button>
+    <button class="tab" data-p="p4">ผู้เกี่ยวข้องและบทบาท</button>
+    <button class="tab" data-p="p5">เอกสารและ KPI</button>
+    <button class="tab" data-p="p6">แบบทดสอบ</button>
+  </div>
+</nav>
+
+<main>
+<!-- ===================== P0 ภาพรวมบท ===================== -->
+<section class="panel show" id="p0">
+  <h2 class="sec-title">ภาพรวมบทที่ 2</h2>
+  <p class="sec-sub">จาก "S&OP คืออะไร" (บทที่ 1) สู่ "S&OP ทำงานอย่างไรในทางปฏิบัติ"</p>
+
+  <div class="card">
+    <h3>บทนำ</h3>
+    <p>S&OP ที่ดีไม่ได้เกิดจากการมีข้อมูลจำนวนมากเพียงอย่างเดียว แต่เกิดจากการที่องค์กรมี<b>โครงสร้างกระบวนการที่ชัดเจน</b> มีเวทีสำหรับทบทวนข้อมูลและตัดสินใจร่วมกัน และสามารถเปลี่ยนข้อมูลให้กลายเป็นแผนที่ปฏิบัติได้จริง</p>
+    <div class="callout"><b>บทนี้คือแกนกลางของรายวิชา</b> — เป็นจุดเชื่อมระหว่างแนวคิดพื้นฐานในบทที่ 1 กับเครื่องมือเชิงเทคนิคในบทถัดไป เช่น การพยากรณ์ความต้องการ (บทที่ 6) การวางแผนการผลิตรวม (บทที่ 7) และการวางแผนการผลิตหลัก (บทที่ 8)</div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>วัตถุประสงค์การเรียนรู้ประจำบท</h3>
+      <div class="obj"><div class="n">1</div><div>อธิบายลำดับชั้นของการวางแผนธุรกิจและตำแหน่งของ S&OP ได้อย่างถูกต้อง</div></div>
+      <div class="obj"><div class="n">2</div><div>อธิบายวงจร S&OP รายเดือน 5 ขั้นตอน พร้อมระบุ input, output และผู้เกี่ยวข้องหลักในแต่ละขั้นตอน</div></div>
+      <div class="obj"><div class="n">3</div><div>วิเคราะห์ตรรกะการจัดสมดุลระหว่างอุปสงค์และอุปทาน รวมทั้งการวิเคราะห์ช่องว่างในกระบวนการ S&OP ได้</div></div>
+      <div class="obj"><div class="n">4</div><div>อธิบายบทบาทของผู้เกี่ยวข้อง เอกสาร และระบบการสื่อสารที่สนับสนุน S&OP ได้</div></div>
+      <div class="obj"><div class="n">5</div><div>ประยุกต์ออกแบบวงจร S&OP อย่างง่ายให้เหมาะสมกับ SME หรือวิสาหกิจชุมชนได้</div></div>
+    </div>
+    <div class="card">
+      <h3>คำสำคัญประจำบท</h3>
+      <div class="kwds">
+        <span>Business Planning Hierarchy</span><span>Demand Review</span><span>Supply Review</span>
+        <span>Pre-S&OP Meeting</span><span>Executive S&OP</span><span>Consensus Demand Plan</span>
+        <span>RCCP</span><span>Demand Shaping</span><span>Scenario Planning</span>
+        <span>S&OP Process Owner</span><span>Disaggregation</span>
+        <span>Inventory Balance Equation</span><span>Process Discipline</span>
+      </div>
+      <div class="callout teal" style="margin-top:18px"><b>วิธีใช้สื่อชุดนี้</b><br>เรียนตามลำดับแท็บ ทดลองคลิกวงจร 5 ขั้นตอน ใช้เครื่องคำนวณ Inventory Balance และ RCCP ประกอบกิจกรรม Gap Analysis Workshop เล่นเกมจับคู่บทบาท แล้วปิดท้ายด้วยแบบทดสอบ 12 ข้อ</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>กิจกรรมการเรียนรู้ประจำบท</h3>
+    <table>
+      <tr><th style="width:230px">กิจกรรม</th><th>โจทย์</th></tr>
+      <tr><td><b>1. S&OP Cycle Simulation</b></td><td>แบ่งบทบาทเป็น VP Sales, VP Operations, VP Finance, Demand Planner และ S&OP Process Owner แล้วจำลองวงจร S&OP 1 เดือนจากกรณีศึกษา (ใช้แท็บ "วงจร S&OP 5 ขั้นตอน" เป็นสคริปต์ประกอบ)</td></tr>
+      <tr><td><b>2. Gap Analysis Workshop</b></td><td>กำหนดสถานการณ์ demand และ capacity แล้วคำนวณ gap พร้อมเสนอ 3 scenario และวิเคราะห์ผลกระทบด้านต้นทุน สต็อก และ service level (ใช้เครื่องคำนวณในแท็บ "ตรรกะ Demand–Supply")</td></tr>
+      <tr><td><b>3. S&OP Template Design</b></td><td>ออกแบบ dashboard รายเดือนด้วย Excel หรือ Google Sheets ครอบคลุม Demand vs. Supply Summary, Inventory Level, KPI Stoplight และ Action Items (ดูรายการเอกสารและ Process KPI ในแท็บ "เอกสารและ KPI")</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===================== P1 โครงสร้าง ===================== -->
+<section class="panel" id="p1">
+  <h2 class="sec-title">2.1 โครงสร้างของ S&OP ในระบบการวางแผนธุรกิจ</h2>
+  <p class="sec-sub">คลิกแต่ละขั้นบันไดเพื่อดูกรอบเวลา หน่วยวางแผน ผู้รับผิดชอบ ความถี่ และความเชื่อมโยงกับ S&OP (ตารางที่ 2.1)</p>
+
+  <div class="card">
+    <div class="stairs" id="stairs"></div>
+    <div class="st-detail" id="stDetail"></div>
+  </div>
+
+  <div class="callout"><b>ทำไม S&OP ต้องใช้ "ตระกูลผลิตภัณฑ์" ไม่ใช่ SKU</b><br>
+  ① องค์กรขนาดกลางถึงใหญ่มี SKU มากเกินกว่าที่ผู้บริหารจะตัดสินใจทีละรายการได้ ② การพยากรณ์ระดับรวมมีความคลาดเคลื่อนต่ำกว่าระดับราย SKU ③ การวางแผนกำลังการผลิตต้องการภาพรวมที่เพียงพอต่อการตัดสินใจเชิงบริหาร — ตัวอย่างเช่น โรงงานน้ำตาลอาจจัดเป็น 3 ตระกูล ได้แก่ น้ำตาลทราย น้ำตาลขาว และน้ำตาลดิบ แทนการวางแผนทีละ SKU</div>
+
+  <div class="card">
+    <h3>เส้นทางการแปลงแผนจาก S&OP สู่การปฏิบัติ (Disaggregation) — ตารางที่ 2.2</h3>
+    <div class="flow"><span class="fbox">S&OP</span><span class="arr">→</span><span class="fbox alt">MPS</span><span style="font-size:.85rem;color:var(--muted)">Disaggregation: ตระกูลสินค้ารายเดือน → SKU รายสัปดาห์</span></div>
+    <div class="flow"><span class="fbox">MPS</span><span class="arr">→</span><span class="fbox alt">MRP</span><span style="font-size:.85rem;color:var(--muted)">BOM Explosion: สินค้าสำเร็จรูป → วัตถุดิบ / ชิ้นส่วน</span></div>
+    <div class="flow"><span class="fbox">MRP</span><span class="arr">→</span><span class="fbox alt">Execution</span><span style="font-size:.85rem;color:var(--muted)">Scheduling: Planned Orders → Work Orders / Purchase Orders</span></div>
+    <div class="flow"><span class="fbox">Execution</span><span class="arr">→</span><span class="fbox alt">S&OP</span><span style="font-size:.85rem;color:var(--muted)">Performance Feedback: Actual Results → KPI Actuals (ป้อนกลับสู่รอบเดือนถัดไป)</span></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>ตรรกะ Top-down (หัวข้อ 2.1.5)</h3>
+      <p style="font-size:.93rem">การถ่ายทอดเป้าหมายจากผู้บริหารระดับสูงลงสู่แผนระดับกลางและระดับปฏิบัติการ เช่น เป้าหมายการขยายตลาด การเติบโตของรายได้ หรือการเพิ่มผลิตภัณฑ์ใหม่</p>
+    </div>
+    <div class="card">
+      <h3>ตรรกะ Bottom-up</h3>
+      <p style="font-size:.93rem">การนำข้อเท็จจริงจากการดำเนินงาน เช่น ข้อจำกัดกำลังการผลิต ปัญหาผู้ส่งมอบ หรือประสิทธิภาพจริงของระบบ ส่งกลับขึ้นไปเพื่อปรับแผนระดับกลางและระดับกลยุทธ์หากจำเป็น</p>
+    </div>
+  </div>
+  <div class="callout teal">นอกจากสองทิศทางนี้ ยังมีมิติ <b>Cross-functional Integration</b> ที่ทำให้ฝ่ายขาย ฝ่ายผลิต ฝ่ายการเงิน และฝ่ายจัดซื้อทำงานร่วมกันในระดับเดียวกัน ไม่ใช่ส่งข้อมูลแยกส่วนกันตามสายงานเพียงอย่างเดียว — S&OP จึงไม่ใช่ "แผนอีกชุดหนึ่ง" แต่เป็นระดับการวางแผนที่ทำให้ <b>"กลยุทธ์" และ "การปฏิบัติ" สอดคล้องกันอย่างเป็นระบบ</b></div>
+</section>
+
+<!-- ===================== P2 วงจร 5 ขั้นตอน ===================== -->
+<section class="panel" id="p2">
+  <h2 class="sec-title">2.2 วงจร S&OP รายเดือน 5 ขั้นตอน</h2>
+  <p class="sec-sub">คลิกแต่ละขั้นตอนเพื่อดูช่วงเวลา ผู้รับผิดชอบ สาระสำคัญ และผลลัพธ์ (ตารางที่ 2.3–2.10) — ใช้เป็นสคริปต์สำหรับกิจกรรม S&OP Cycle Simulation ได้</p>
+
+  <div class="card">
+    <div class="cycle" id="cycle"></div>
+    <div class="cs-detail" id="csDetail"></div>
+  </div>
+
+  <div class="card">
+    <h3>การไหลของข้อมูลระหว่างขั้นตอน (ตารางที่ 2.10)</h3>
+    <table>
+      <tr><th>จากขั้นตอน</th><th>ไปยังขั้นตอน</th><th>ข้อมูลที่ถ่ายโอน</th><th>รูปแบบเอกสาร</th></tr>
+      <tr><td>Data Gathering</td><td>Demand Review</td><td>Sales actuals, forecast base, market data</td><td>S&OP Data Pack</td></tr>
+      <tr><td>Demand Review</td><td>Supply Review</td><td>Consensus Demand Plan + assumptions</td><td>Demand Plan Report</td></tr>
+      <tr><td>Data + Demand + Supply</td><td>Pre-S&OP</td><td>ข้อมูลครบทุกมิติสำหรับ gap analysis</td><td>Integrated S&OP Report</td></tr>
+      <tr><td>Pre-S&OP</td><td>Executive S&OP</td><td>Scenario Analysis, Recommendations</td><td>Executive Summary Deck</td></tr>
+      <tr><td>Executive S&OP</td><td>ทั้งองค์กร</td><td>Approved Plan + Action Items</td><td>S&OP Communication</td></tr>
+      <tr><td>Executive S&OP</td><td>รอบเดือนถัดไป</td><td>Targets และ KPIs</td><td>KPI Dashboard Update</td></tr>
+    </table>
+    <div class="callout" style="margin-bottom:0"><b>One Set of Numbers: หัวใจของ Executive S&OP</b> — หลังจากผู้บริหารอนุมัติแผนแล้ว ตัวเลขนั้นคือ "ความจริงร่วม" ขององค์กร หากมีการใช้ตัวเลขอีกชุดหนึ่งอย่างไม่เป็นทางการ แสดงว่ากระบวนการ S&OP เริ่มอ่อนแอหรืออาจล้มเหลวในเชิงวินัยกระบวนการ</div>
+  </div>
+</section>
+
+<!-- ===================== P3 ตรรกะ Demand-Supply ===================== -->
+<section class="panel" id="p3">
+  <h2 class="sec-title">2.3 ตรรกะการจัดสมดุลระหว่างอุปสงค์และอุปทาน</h2>
+  <p class="sec-sub">สมการหัวใจของ S&OP + เครื่องคำนวณสำหรับกิจกรรม Gap Analysis Workshop</p>
+
+  <div class="card">
+    <h3>สมการพื้นฐานของ S&OP (หัวข้อ 2.3.1)</h3>
+    <div class="eq">Ending Inventory(t) = Beginning Inventory(t−1) + <b>Production(t)</b> − <b>Sales(t)</b></div>
+    <p style="font-size:.93rem">หากการผลิตไม่พอรองรับยอดขาย สินค้าคงคลังปลายงวดจะลดลงจนต่ำกว่าระดับเป้าหมายและเสี่ยงต่อ <b>stockout</b> ในทางกลับกัน หากผลิตมากเกินไป สินค้าคงคลังจะสะสมสูงและก่อให้เกิด<b>ต้นทุนถือครอง</b>เพิ่มขึ้น — สมการนี้คือแกนกลางของการตรวจสอบว่าแผน demand และ supply สมดุลกันหรือไม่</p>
+  </div>
+
+  <div class="card calc">
+    <h3>เครื่องคำนวณ 1: Inventory Balance Simulator (6 เดือน)</h3>
+    <p style="font-size:.9rem;color:var(--muted);margin-bottom:12px">กรอกสินค้าคงคลังต้นงวด สต็อกเป้าหมายขั้นต่ำ แผนการผลิตและยอดขายรายเดือน แล้วดูว่าสินค้าคงคลังปลายงวดสมดุลหรือไม่</p>
+    <div class="cgrid" style="max-width:420px">
+      <div><label>สินค้าคงคลังต้นงวด (หน่วย)</label><input type="number" id="ibBeg" value="200"></div>
+      <div><label>สต็อกเป้าหมายขั้นต่ำ</label><input type="number" id="ibSafe" value="150"></div>
+    </div>
+    <div style="overflow-x:auto">
+    <table class="inv-table">
+      <tr><th>เดือน</th><th>ม.1</th><th>ม.2</th><th>ม.3</th><th>ม.4</th><th>ม.5</th><th>ม.6</th></tr>
+      <tr><td><b>การผลิต</b></td>
+        <td><input type="number" class="ibP" value="500"></td><td><input type="number" class="ibP" value="500"></td>
+        <td><input type="number" class="ibP" value="500"></td><td><input type="number" class="ibP" value="500"></td>
+        <td><input type="number" class="ibP" value="500"></td><td><input type="number" class="ibP" value="500"></td></tr>
+      <tr><td><b>ยอดขาย</b></td>
+        <td><input type="number" class="ibS" value="450"></td><td><input type="number" class="ibS" value="480"></td>
+        <td><input type="number" class="ibS" value="560"></td><td><input type="number" class="ibS" value="620"></td>
+        <td><input type="number" class="ibS" value="540"></td><td><input type="number" class="ibS" value="470"></td></tr>
+    </table>
+    </div>
+    <button class="btn gold" id="ibCalc" style="margin-top:12px">คำนวณสมดุลสินค้าคงคลัง</button>
+    <div class="result" id="ibResult"></div>
+  </div>
+
+  <div class="card calc">
+    <h3>เครื่องคำนวณ 2: Rough-Cut Capacity Planning (RCCP)</h3>
+    <p style="font-size:.9rem;color:var(--muted);margin-bottom:12px">RCCP ใช้ในขั้นตอน Supply Review เพื่อเปรียบเทียบภาระงาน (Load) กับกำลังการผลิต (Capacity) ระดับภาพรวม และระบุ bottleneck — กรอกค่าของทรัพยากรแล้วคำนวณ Utilization</p>
+    <div class="cgrid" style="max-width:560px">
+      <div><label>กำลังการผลิต (ชม./เดือน)</label><input type="number" id="rcCap" value="320"></div>
+      <div><label>Load จาก Demand Plan (ชม.)</label><input type="number" id="rcLoad" value="350"></div>
+    </div>
+    <button class="btn gold" id="rcCalc">คำนวณ Utilization</button>
+    <div class="result" id="rcResult"></div>
+    <div class="callout" style="font-size:.88rem;margin-bottom:0">เกณฑ์ที่ใช้ในเครื่องคำนวณ: Utilization > 100% = <b>Overload</b> · 90–100% = <b>เฝ้าระวัง</b> · ต่ำกว่า 90% = <b>ปกติ</b> (เกณฑ์จริงอาจปรับตามนโยบายของแต่ละทรัพยากร เช่น คลังสินค้าอาจเฝ้าระวังตั้งแต่ 80%)</div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>ประเภทของ Gap และแนวทางแก้ไข (ตารางที่ 2.11)</h3>
+      <table>
+        <tr><th>ประเภท Gap</th><th>แนวทางแก้ไขหลัก</th></tr>
+        <tr><td><b>Demand > Supply</b><br><span style="font-size:.8rem;color:var(--muted)">เสี่ยง Stockout / Backorder</span></td><td>OT, Subcontract, Safety Stock, Demand Shaping</td></tr>
+        <tr><td><b>Supply > Demand</b><br><span style="font-size:.8rem;color:var(--muted)">สต็อกสูง ต้นทุนเพิ่ม</span></td><td>ลดการผลิต, Promotion, ขยายช่องทาง</td></tr>
+        <tr><td><b>Seasonal Gap</b><br><span style="font-size:.8rem;color:var(--muted)">ผันผวนตามฤดูกาล</span></td><td>Pre-build Inventory, Mixed Strategy</td></tr>
+        <tr><td><b>Intermittent Gap</b><br><span style="font-size:.8rem;color:var(--muted)">ความต้องการไม่สม่ำเสมอ</span></td><td>MTO, Safety Stock, Quick Response</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Demand Shaping และ Scenario Planning (หัวข้อ 2.3.3–2.3.4)</h3>
+      <p style="font-size:.92rem">เมื่อ supply รองรับ demand ไม่ได้ทันที องค์กรไม่จำเป็นต้องเพิ่มกำลังการผลิตเสมอไป — <b>Demand Shaping</b> คือการปรับรูปแบบความต้องการ เช่น จัดโปรโมชั่นในช่วงกำลังการผลิตว่าง ปรับราคา peak/off-peak บริหาร lead time กับลูกค้า หรือเสนอสินค้าทดแทนที่มี capacity ว่างกว่า ซึ่งบางครั้งต้นทุนต่ำกว่าและยืดหยุ่นกว่าการเพิ่ม supply โดยตรง</p>
+      <div class="callout teal" style="margin-bottom:0;font-size:.88rem"><b>Scenario Planning</b> ควรเตรียมอย่างน้อย 4 แบบ: What-if · Risk · Opportunity · Disruption — เพื่อให้พร้อมตอบว่า "ถ้าเกิดเหตุการณ์ X จะทำอย่างไร" ไม่ใช่เพียง "คาดว่าจะเกิดอะไร"</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>ตัวอย่าง Scenario Analysis ใน Pre-S&OP (ตารางที่ 2.8)</h3>
+    <table>
+      <tr><th>Scenario</th><th>สมมติฐาน</th><th>ผลต่อ Revenue</th><th>ผลต่อ Cost</th><th>Service Level</th><th>ข้อแนะนำ</th></tr>
+      <tr><td><b>A: Base Case</b></td><td>Demand ตามแผน + OT 10%</td><td>0%</td><td>+3%</td><td>95%</td><td><span class="badge b-ok">แนะนำ</span></td></tr>
+      <tr><td><b>B: Aggressive</b></td><td>รับ order เพิ่ม 15% + subcontract</td><td>+12%</td><td>+18%</td><td>93%</td><td><span class="badge b-warn">ทำได้ถ้า margin ยังดี</span></td></tr>
+      <tr><td><b>C: Conservative</b></td><td>จำกัดการผลิตตาม capacity ปกติ</td><td>−8%</td><td>0%</td><td>88%</td><td><span class="badge b-bad">ไม่แนะนำ</span></td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===================== P4 ผู้เกี่ยวข้อง ===================== -->
+<section class="panel" id="p4">
+  <h2 class="sec-title">2.4 ผู้เกี่ยวข้องและบทบาทในกระบวนการ S&OP</h2>
+  <p class="sec-sub">ความสำเร็จของ S&OP ขึ้นอยู่กับการมี "คนที่ถูกต้อง" ใน "ขั้นตอนที่ถูกต้อง" — เกมจับคู่ตำแหน่ง ↔ บทบาทหลัก (ตารางที่ 2.12)</p>
+
+  <div class="card">
+    <div class="match-wrap">
+      <div class="mcol"><h4>ตำแหน่ง</h4><div id="mLeft"></div></div>
+      <div class="mcol"><h4>บทบาทหลัก</h4><div id="mRight"></div></div>
+    </div>
+    <div class="mstat" id="mStat">จับคู่แล้ว 0 / 6</div>
+    <button class="btn ghost" id="mgReset" style="margin-top:8px">เริ่มใหม่ (สลับลำดับ)</button>
+  </div>
+
+  <div class="card">
+    <h3>บทบาทของ S&OP Process Owner (หัวข้อ 2.4.2)</h3>
+    <p style="font-size:.93rem">เป็นตำแหน่งสำคัญที่มักถูกมองข้าม ทั้งที่เป็นผู้ทำให้กระบวนการดำเนินไปได้จริง ต้องมีทั้ง <b>ความรู้ด้านซัพพลายเชน</b> · <b>ทักษะการสื่อสารและ facilitation</b> · <b>ความสามารถในการวิเคราะห์ข้อมูล</b> · <b>ความเข้าใจเบื้องต้นด้านการเงิน</b> · และ<b>วินัยในการติดตาม action items</b></p>
+  </div>
+
+  <div class="card">
+    <h3>การปรับใช้ S&OP ตามขนาดองค์กร (ตารางที่ 2.13)</h3>
+    <p style="font-size:.9rem;color:var(--muted);margin-bottom:10px">เลือกขนาดองค์กรเพื่อดูวงจร การประชุม และเครื่องมือที่แนะนำ</p>
+    <div class="orgsel" id="orgSel"></div>
+    <div class="st-detail" id="orgDetail"></div>
+    <div class="callout" style="margin-bottom:0"><b>S&OP แบบง่ายสำหรับวิสาหกิจชุมชน</b> — เริ่มจากประชุมเดือนละครั้ง · ใช้ยอดขาย สต็อก และแผนจัดซื้อเป็นฐาน · ใช้ Excel หรือ Google Sheets · มีผู้รับผิดชอบข้อมูลและการตัดสินใจชัดเจน — หลักสำคัญคือ<b>ความสม่ำเสมอและการใช้ข้อมูลร่วมกัน</b></div>
+  </div>
+</section>
+
+<!-- ===================== P5 เอกสารและ KPI ===================== -->
+<section class="panel" id="p5">
+  <h2 class="sec-title">2.5 เอกสาร ระบบรายงาน และการสื่อสารใน S&OP</h2>
+  <p class="sec-sub">ระบบเอกสารที่ดีทำให้ S&OP ยั่งยืนแม้บุคลากรเปลี่ยน สร้างความโปร่งใส และเป็นสะพานจากการประชุมสู่การดำเนินงานจริง</p>
+
+  <div class="card">
+    <h3>เอกสารหลักในวงจร S&OP (ตารางที่ 2.14)</h3>
+    <table>
+      <tr><th>เอกสาร</th><th>วัตถุประสงค์</th><th>ผู้จัดทำ</th><th>ผู้รับ</th><th>ความถี่</th></tr>
+      <tr><td><b>S&OP Data Pack</b></td><td>รวมข้อมูลพื้นฐานสำหรับการประชุม</td><td>Process Owner + IT</td><td>ทุกผู้เข้าร่วม</td><td>ทุกเดือน</td></tr>
+      <tr><td><b>Consensus Demand Plan</b></td><td>แผนความต้องการที่ยืนยันแล้ว</td><td>Demand Planner</td><td>Operations, Finance</td><td>หลัง Demand Review</td></tr>
+      <tr><td><b>RCCP Report</b></td><td>ผลประเมินกำลังการผลิต</td><td>Supply Planner</td><td>Pre-S&OP Team</td><td>หลัง Supply Review</td></tr>
+      <tr><td><b>Pre-S&OP Report</b></td><td>สรุปปัญหา ทางเลือก ข้อเสนอแนะ</td><td>Process Owner</td><td>ผู้บริหาร</td><td>หลัง Pre-S&OP</td></tr>
+      <tr><td><b>Executive Presentation</b></td><td>สไลด์สำหรับผู้บริหาร</td><td>Process Owner</td><td>CEO, VP ทุกฝ่าย</td><td>ก่อน Executive S&OP</td></tr>
+      <tr><td><b>Minutes & Action Items</b></td><td>รายงานการประชุมและภารกิจ</td><td>Process Owner</td><td>ทุกผู้เข้าร่วม</td><td>หลังประชุม 24 ชม.</td></tr>
+      <tr><td><b>Approved S&OP Plan</b></td><td>แผนที่อนุมัติแล้ว</td><td>Process Owner</td><td>ทั้งองค์กร</td><td>หลัง Executive S&OP</td></tr>
+    </table>
+    <div class="callout teal" style="margin-bottom:0;font-size:.9rem"><b>การสื่อสารแผนที่อนุมัติ (หัวข้อ 2.5.2)</b> — ต้องครอบคลุมระดับผู้บริหาร ผู้จัดการ ปฏิบัติการ รวมถึง supplier / key customer กรณีมี collaborative planning ผ่านเครื่องมือ เช่น Email, Google Drive, SharePoint, Power BI, ERP, Teams หรือ Line — หลักสำคัญคือข้อมูลเข้าถึงง่าย เป็นปัจจุบัน และสะท้อน<b>แผนชุดเดียวกันทั้งองค์กร</b></div>
+  </div>
+
+  <div class="card">
+    <h3>ตัวชี้วัดประสิทธิภาพของกระบวนการ (Process KPI) — ตารางที่ 2.15</h3>
+    <table>
+      <tr><th>Process KPI</th><th>คำอธิบาย</th><th style="width:110px">เป้าหมาย</th><th>วิธีวัด</th></tr>
+      <tr><td><b>Meeting Participation Rate</b></td><td>ผู้เข้าร่วมถูกต้องครบถ้วน</td><td>≥ 90%</td><td>จำนวนที่เข้าร่วม / จำนวนที่ต้องเข้า</td></tr>
+      <tr><td><b>Data Ready On-time</b></td><td>ความพร้อมของ Data Pack ตามกำหนด</td><td>≥ 95%</td><td>จำนวนครั้งที่พร้อมตามกำหนด</td></tr>
+      <tr><td><b>Action Item Closure Rate</b></td><td>การปิด action items ตรงเวลา</td><td>≥ 85%</td><td>Action ปิด / Action ทั้งหมด</td></tr>
+      <tr><td><b>Cycle Adherence</b></td><td>การทำ S&OP ครบทุกเดือน</td><td>100%</td><td>เดือนที่ทำ / 12 เดือน</td></tr>
+      <tr><td><b>Plan Stability</b></td><td>การเปลี่ยนแปลงแผนหลังอนุมัติ</td><td>&lt; 5%</td><td>การเปลี่ยนแปลง / แผนเดิม</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===================== P6 Quiz ===================== -->
+<section class="panel" id="p6">
+  <h2 class="sec-title">แบบทดสอบท้ายบท (12 ข้อ)</h2>
+  <p class="sec-sub">เลือกคำตอบแล้วรับคำอธิบายทันที — ครอบคลุมหัวข้อ 2.1–2.5 ระดับ L2 Understand ถึง L4 Analyze</p>
+  <div id="quizBox"></div>
+  <div class="score-box" id="scoreBox"></div>
+  <button class="btn ghost" id="qReset" style="margin-top:14px">ทำแบบทดสอบใหม่</button>
+</section>
+
+</main>
+<footer>
+  สื่อการสอนประกอบตำรา รายวิชา 5772611 การวางแผนการขายและการดำเนินการ · บทที่ 2 · สาขาวิชาการจัดการโลจิสติกส์และซัพพลายเชน มหาวิทยาลัยราชภัฏอุบลราชธานี
+</footer>
+<script>
+/* ---------- Tabs ---------- */
+const tabs=document.querySelectorAll('.tab');
+tabs.forEach(t=>t.addEventListener('click',()=>{
+  tabs.forEach(x=>x.classList.remove('active'));t.classList.add('active');
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('show'));
+  document.getElementById(t.dataset.p).classList.add('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+}));
+
+/* ---------- Hierarchy stairs (ตารางที่ 2.1) ---------- */
+const levels=[
+ {nm:'Strategic Business Plan',time:'3–10 ปี',unit:'ตลาด / ธุรกิจ',own:'CEO, Board',freq:'ปีละ 1–2 ครั้ง',rel:'ให้ทิศทางเชิงกลยุทธ์ เช่น เป้าหมายการเติบโต กลยุทธ์การแข่งขัน การลงทุน และเป้าหมายทางการเงิน (รายได้ ส่วนแบ่งตลาด ROI) — S&OP ต้องรับทิศทางจากระดับนี้แล้วแปลงเป็นแผนที่ปฏิบัติได้จริงใน 12–18 เดือน'},
+ {nm:'S&OP Plan',time:'12–18 เดือน',unit:'ตระกูลผลิตภัณฑ์',own:'VP / GM',freq:'ทุกเดือน',rel:'แกนกลางของบทนี้ — บูรณาการข้อมูลหลายฝ่ายเพื่อสร้างสมดุล demand–supply โดยใช้หน่วยวางแผนระดับตระกูลผลิตภัณฑ์ซึ่งเหมาะกับการตัดสินใจระดับผู้บริหารมากกว่าราย SKU'},
+ {nm:'Master Production Schedule (MPS)',time:'1–6 เดือน',unit:'SKU รายสัปดาห์',own:'Production Planner',freq:'รายสัปดาห์',rel:'รับทิศทางจาก S&OP ผ่านกระบวนการ Disaggregation — แปลงตระกูลสินค้ารายเดือนเป็น SKU รายสัปดาห์'},
+ {nm:'Material Requirements Planning (MRP)',time:'2–12 สัปดาห์',unit:'ชิ้นส่วน / วัตถุดิบ',own:'Material Planner',freq:'รายวัน–สัปดาห์',rel:'รับข้อมูลจาก MPS ผ่าน BOM Explosion — แปลงสินค้าสำเร็จรูปเป็นความต้องการวัตถุดิบและชิ้นส่วน'},
+ {nm:'Production Scheduling & Execution',time:'วัน–สัปดาห์',unit:'Work Order / Job',own:'Supervisor / Operator',freq:'รายวัน',rel:'ปฏิบัติตามแผน และส่งผลจริงกลับเป็น feedback (Actual Results → KPI Actuals) สู่ S&OP รอบเดือนถัดไป'}
+];
+const stairs=document.getElementById('stairs'),stDetail=document.getElementById('stDetail');
+levels.forEach((l,i)=>{
+  const b=document.createElement('button');b.className='stair'+(i===1?' active':'');
+  b.innerHTML=`<span class="st-lv">${i+1}</span><span class="st-nm">${l.nm}</span><span class="st-time">${l.time}</span>`;
+  b.addEventListener('click',()=>{document.querySelectorAll('.stair').forEach(x=>x.classList.remove('active'));b.classList.add('active');showLv(i);});
+  stairs.appendChild(b);
+});
+function showLv(i){const l=levels[i];
+  stDetail.innerHTML=`<h3 style="color:var(--indigo);margin-bottom:8px">ระดับ ${i+1}: ${l.nm}</h3>
+  <table><tr><th style="width:180px">มิติ</th><th>รายละเอียด</th></tr>
+  <tr><td>กรอบเวลา</td><td>${l.time}</td></tr>
+  <tr><td>หน่วยการวางแผน</td><td>${l.unit}</td></tr>
+  <tr><td>ผู้รับผิดชอบ</td><td>${l.own}</td></tr>
+  <tr><td>ความถี่</td><td>${l.freq}</td></tr>
+  <tr><td>เชื่อมกับ S&OP อย่างไร</td><td>${l.rel}</td></tr></table>`;}
+showLv(1);
+
+/* ---------- Cycle 5 steps (ตารางที่ 2.3–2.9) ---------- */
+const steps=[
+ {nm:'Data Gathering & Cleansing',wk:'สัปดาห์ที่ 1 (วันที่ 1–7)',own:'S&OP Process Owner + IT/Data Team',
+  body:'รวบรวมข้อมูลที่ถูกต้อง ครบถ้วน ทันเวลา จากทุกฝ่าย — เป็นรากฐานของทุกการประชุมถัดไป ข้อมูลสำคัญ 7 หมวด ได้แก่ Sales Performance (ยอดขายจริง vs. แผน), Demand Forecast 12–18 เดือน, Inventory Status (FG/WIP/RM), Production Performance, Procurement Status, Financial Data และ Market Intelligence',
+  note:'Garbage In, Garbage Out — หากข้อมูลตั้งต้นไม่ครบหรือไม่ถูกต้อง ต่อให้มีระบบวิเคราะห์ดีเพียงใด ผลลัพธ์ก็ผิดพลาดได้ตั้งแต่ต้นทาง ขั้นตอนนี้จึงเป็นงานเชิงกลยุทธ์ ไม่ใช่งานธุรการ',
+  out:['S&OP Data Pack','Performance Dashboard','Data Issues Log']},
+ {nm:'Demand Review Meeting',wk:'สัปดาห์ที่ 2 (วันที่ 8–14)',own:'VP Sales, Marketing, Demand Planner',
+  body:'เวทีที่ฝ่ายขาย การตลาด และผู้วางแผนความต้องการร่วมกันทบทวนและปรับแผนความต้องการ 12–18 เดือนข้างหน้า เป้าหมายสำคัญที่สุดคือการสร้าง Consensus Demand Plan ที่ทุกฝ่ายฝั่งอุปสงค์ยอมรับร่วมกัน',
+  note:'หลักสำคัญ: แยกให้ชัดระหว่าง Statistical Forecast กับ Judgment Adjustment และการปรับทุกครั้งต้องมีเหตุผล (โปรโมชั่น ลูกค้าใหม่ การเปลี่ยนแปลงตลาด ความเสี่ยงภูมิรัฐศาสตร์) เพื่อให้ตรวจสอบย้อนกลับได้',
+  out:['Consensus Demand Plan','Demand Assumptions Log','Demand Risks & Opportunities','Demand Review Minutes']},
+ {nm:'Supply Review Meeting',wk:'สัปดาห์ที่ 2–3 (วันที่ 10–18)',own:'VP Operations, Procurement, SC Manager',
+  body:'ฝ่ายปฏิบัติการ การผลิต จัดซื้อ และโลจิสติกส์ร่วมกันประเมินว่าองค์กรตอบสนองแผนความต้องการได้เพียงใด ตรวจสอบข้อจำกัดของกำลังการผลิต วัตถุดิบ คลังสินค้า และผู้ส่งมอบ — เครื่องมือสำคัญคือ Rough-Cut Capacity Planning (RCCP) เพื่อระบุ bottleneck ระดับภาพรวม',
+  note:'ทางเลือกแก้ Supply Gap (ตารางที่ 2.7): ปรับ Supply ขึ้น (OT, จ้างชั่วคราว, subcontract · 1–4 สัปดาห์) / ปรับ Demand ลง (เลื่อนส่งมอบ, ลด promotion · ทันทีแต่เสี่ยง) / สะสม Inventory (ผลิตล่วงหน้า · 2–8 สัปดาห์) / เพิ่มกำลังผลิตระยะยาว (ซื้อเครื่องจักร, พัฒนา supplier · 6–18 เดือน)',
+  out:['Supply Plan','RCCP Results','Supply Gaps Report','Supply Options Analysis']},
+ {nm:'Pre-S&OP Meeting',wk:'สัปดาห์ที่ 3 (วันที่ 18–22)',own:'ทีม S&OP ระดับ Manager',
+  body:'ทีมระดับผู้จัดการจากหลายฝ่ายร่วมกันกลั่นกรองปัญหา สร้างทางเลือก และเตรียมข้อเสนอเชิงบริหาร — ทำ Gap Analysis อย่างละเอียด สร้าง scenario 2–3 ทางเลือก ประเมินผลกระทบทางการเงิน และจัดลำดับประเด็นที่ต้องการการตัดสินใจ',
+  note:'ขั้นตอนนี้สำคัญมาก เพราะช่วยให้ Executive S&OP มุ่งเน้นที่ "การตัดสินใจ" ไม่ใช่เสียเวลาค้นหาปัญหาเป็นครั้งแรกในห้องประชุมผู้บริหาร',
+  out:['Pre-S&OP Report','Scenario Analysis','Issue List','Recommended Course of Action']},
+ {nm:'Executive S&OP Meeting',wk:'สัปดาห์ที่ 4 (วันที่ 23–28)',own:'CEO/MD, VP ทุกฝ่าย',
+  body:'ผู้บริหารระดับสูงทบทวนสถานะธุรกิจและตัดสินใจขั้นสุดท้ายเกี่ยวกับแผน S&OP ที่จะเป็นตัวเลขร่วมของทั้งองค์กรในเดือนถัดไป — เน้นการตัดสินใจเชิงกลยุทธ์ ไม่ใช่การอภิปรายตัวเลขพื้นฐาน',
+  note:'One Set of Numbers: หลังอนุมัติแล้ว ตัวเลขนั้นคือ "ความจริงร่วม" ขององค์กร หากมีการใช้ตัวเลขอีกชุดอย่างไม่เป็นทางการ แสดงว่ากระบวนการเริ่มอ่อนแอในเชิงวินัย',
+  out:['Approved S&OP Plan','Authorized Actions','Strategic Guidance','Communication Plan']}
+];
+const cycle=document.getElementById('cycle'),csDetail=document.getElementById('csDetail');
+steps.forEach((s,i)=>{
+  const b=document.createElement('button');b.className='cstep'+(i===0?' active':'');
+  b.innerHTML=`<div class="cs-n">${i+1}</div><div class="cs-nm">${s.nm}</div><div class="cs-wk">${s.wk}</div>`;
+  b.addEventListener('click',()=>{document.querySelectorAll('.cstep').forEach(x=>x.classList.remove('active'));b.classList.add('active');showStep(i);});
+  cycle.appendChild(b);
+});
+function showStep(i){const s=steps[i];
+  csDetail.innerHTML=`<h4>ขั้นตอนที่ ${i+1}: ${s.nm}</h4>
+  <p style="font-size:.86rem;color:var(--muted);margin-bottom:8px">${s.wk} · ผู้รับผิดชอบ: <b style="color:var(--teal)">${s.own}</b></p>
+  <p style="font-size:.93rem">${s.body}</p>
+  <div class="callout" style="font-size:.88rem">${s.note}</div>
+  <div style="font-weight:600;color:var(--indigo);font-size:.9rem">ผลลัพธ์ของขั้นตอนนี้</div>
+  <div class="tagline">${s.out.map(o=>`<span>${o}</span>`).join('')}</div>`;}
+showStep(0);
+
+/* ---------- Inventory Balance Simulator ---------- */
+document.getElementById('ibCalc').addEventListener('click',()=>{
+  const beg=+document.getElementById('ibBeg').value||0;
+  const safe=+document.getElementById('ibSafe').value||0;
+  const P=[...document.querySelectorAll('.ibP')].map(i=>+i.value||0);
+  const S=[...document.querySelectorAll('.ibS')].map(i=>+i.value||0);
+  let inv=beg,rows='',ei=[],maxV=beg;
+  for(let m=0;m<6;m++){
+    const start=inv; inv=start+P[m]-S[m]; ei.push(inv); maxV=Math.max(maxV,inv,P[m],S[m]);
+    let st,cls;
+    if(inv<0){st='Stockout';cls='b-bad';}
+    else if(inv<safe){st='ต่ำกว่าเป้าหมาย';cls='b-warn';}
+    else{st='ปกติ';cls='b-ok';}
+    rows+=`<tr><td>เดือน ${m+1}</td><td>${start.toLocaleString()}</td><td>${P[m].toLocaleString()}</td><td>${S[m].toLocaleString()}</td><td><b>${inv.toLocaleString()}</b></td><td><span class="badge ${cls}">${st}</span></td></tr>`;
+  }
+  // simple SVG bar chart of ending inventory
+  const w=560,h=190,bw=64,gap=24,base=h-30,scaleMax=Math.max(maxV,safe,1);
+  let bars='',labels='';
+  ei.forEach((v,m)=>{
+    const x=20+m*(bw+gap);
+    const bh=Math.max(2,Math.abs(v)/scaleMax*(h-70));
+    const y=v>=0?base-bh:base;
+    const col=v<0?'#b3413a':(v<safe?'#c9962e':'#0f766e');
+    bars+=`<rect x="${x}" y="${y}" width="${bw}" height="${bh}" rx="5" fill="${col}"></rect>
+    <text x="${x+bw/2}" y="${v>=0?y-6:y+bh+14}" text-anchor="middle" font-size="12" fill="#26263a" font-weight="600">${v}</text>`;
+    labels+=`<text x="${x+bw/2}" y="${base+18}" text-anchor="middle" font-size="12" fill="#6b6b82">ม.${m+1}</text>`;
+  });
+  const safeY=base-(safe/scaleMax*(h-70));
+  const r=document.getElementById('ibResult');
+  const worst=Math.min(...ei);
+  let verdict = worst<0
+    ? '<b style="color:var(--danger)">แผนไม่สมดุล — เกิด Stockout</b> ควรพิจารณา OT / Subcontract / Pre-build Inventory หรือ Demand Shaping (ตารางที่ 2.11)'
+    : (worst<safe
+      ? '<b style="color:var(--warn)">เฝ้าระวัง — สต็อกต่ำกว่าเป้าหมายบางเดือน</b> ควรปรับแผนผลิตล่วงหน้าหรือเจรจา lead time กับลูกค้า'
+      : '<b style="color:var(--ok)">แผนสมดุลดี</b> สต็อกปลายงวดไม่ต่ำกว่าเป้าหมายตลอด 6 เดือน — ตรวจสอบเพิ่มว่าสต็อกสูงเกินจนมีต้นทุนถือครองหรือไม่');
+  r.className='result show';
+  r.innerHTML=`<div class="rbig">ผลการจำลองสมดุลสินค้าคงคลัง</div>
+  <div style="overflow-x:auto;margin-top:8px"><table>
+  <tr><th>เดือน</th><th>ต้นงวด</th><th>+ การผลิต</th><th>− ยอดขาย</th><th>= ปลายงวด</th><th>สถานะ</th></tr>${rows}</table></div>
+  <div class="chart"><svg viewBox="0 0 ${w} ${h}" width="100%" style="max-width:${w}px">
+  <line x1="14" y1="${base}" x2="${w-10}" y2="${base}" stroke="#e6e2d8" stroke-width="2"/>
+  <line x1="14" y1="${safeY}" x2="${w-10}" y2="${safeY}" stroke="#c9962e" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="${w-12}" y="${safeY-5}" text-anchor="end" font-size="11" fill="#a4700f">เป้าหมายขั้นต่ำ ${safe}</text>
+  ${bars}${labels}</svg></div>
+  <p style="font-size:.92rem;margin-top:8px">${verdict}</p>`;
+});
+
+/* ---------- RCCP calculator ---------- */
+document.getElementById('rcCalc').addEventListener('click',()=>{
+  const cap=+document.getElementById('rcCap').value||0;
+  const load=+document.getElementById('rcLoad').value||0;
+  const r=document.getElementById('rcResult');
+  if(cap<=0){r.className='result show';r.innerHTML='<b style="color:var(--danger)">กรุณากรอกกำลังการผลิตที่มากกว่า 0</b>';return;}
+  const u=load/cap*100;
+  let st,cls,adv;
+  if(u>100){st='Overload';cls='b-bad';adv='ทรัพยากรนี้เป็น bottleneck — พิจารณา OT, Subcontract, ผลิตล่วงหน้า (Pre-build), Demand Shaping หรือกระจายโหลดไปทรัพยากรอื่น';}
+  else if(u>=90){st='เฝ้าระวัง';cls='b-warn';adv='ใกล้เต็มกำลัง — เผื่อ buffer สำหรับความผันผวนและงานซ่อมบำรุง ติดตามใกล้ชิดในรอบถัดไป';}
+  else{st='ปกติ';cls='b-ok';adv='กำลังการผลิตเพียงพอต่อ Demand Plan — มี headroom '+ (100-u).toFixed(1) +'% สำหรับรับ order เพิ่มหรือรองรับความผันผวน';}
+  r.className='result show';
+  r.innerHTML=`<div class="rbig">Utilization = ${u.toFixed(1)}% <span class="badge ${cls}" style="vertical-align:middle;margin-left:6px">${st}</span></div>
+  <p style="font-size:.9rem;color:var(--muted)">สูตร: Utilization = Load ÷ Capacity × 100 = ${load.toLocaleString()} ÷ ${cap.toLocaleString()} × 100</p>
+  <p style="font-size:.92rem;margin-top:6px">${adv}</p>
+  <p style="font-size:.85rem;color:var(--muted);margin-top:6px">เทียบตัวอย่างตารางที่ 2.6: ไลน์ผลิต B (Load 350 / Capacity 320) = 109.4% → Overload</p>`;
+});
+
+/* ---------- Role matching (ตารางที่ 2.12) ---------- */
+const pairs=[
+ {c:'CEO / MD',s:'ตัดสินใจขั้นสุดท้าย กำหนดทิศทาง (เข้าร่วม Executive S&OP)'},
+ {c:'VP Sales / Commercial',s:'นำเสนอ demand outlook และ Market Intelligence'},
+ {c:'VP Operations',s:'ประเมินกำลังการผลิตและข้อจำกัด (Capacity, Constraints)'},
+ {c:'VP Finance / CFO',s:'ประเมินผลกระทบทางการเงิน (P&L, Cash Flow) และอนุมัติงบ'},
+ {c:'S&OP Process Owner',s:'ประสานวงจรทั้งหมด จัดทำ Agenda, Data Pack, Minutes'},
+ {c:'Demand Planner',s:'ดูแล forecast models และจัดทำ Consensus Demand Plan'}
+];
+let selL=null,matched=0;
+function shuffle(a){return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1]);}
+function buildMatch(){
+  selL=null;matched=0;
+  const L=document.getElementById('mLeft'),R=document.getElementById('mRight');
+  L.innerHTML='';R.innerHTML='';
+  shuffle(pairs.map((p,i)=>({t:p.c,i}))).forEach(o=>{
+    const b=document.createElement('button');b.className='mitem';b.textContent=o.t;b.dataset.i=o.i;
+    b.addEventListener('click',()=>{if(b.classList.contains('done'))return;
+      L.querySelectorAll('.mitem').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');selL=b;});
+    L.appendChild(b);
+  });
+  shuffle(pairs.map((p,i)=>({t:p.s,i}))).forEach(o=>{
+    const b=document.createElement('button');b.className='mitem';b.textContent=o.t;b.dataset.i=o.i;
+    b.addEventListener('click',()=>{if(b.classList.contains('done')||!selL)return;
+      if(b.dataset.i===selL.dataset.i){b.classList.add('done');selL.classList.add('done');selL.classList.remove('sel');selL=null;matched++;
+        document.getElementById('mStat').innerHTML=`จับคู่แล้ว ${matched} / 6`+(matched===6?' — <b style="color:var(--ok)">ครบถ้วน! "คนที่ถูกต้อง" อยู่ใน "ขั้นตอนที่ถูกต้อง" แล้ว</b>':'');
+      }else{b.classList.add('wrong');setTimeout(()=>b.classList.remove('wrong'),350);}
+    });
+    R.appendChild(b);
+  });
+  document.getElementById('mStat').textContent='จับคู่แล้ว 0 / 6';
+}
+buildMatch();
+document.getElementById('mgReset').addEventListener('click',buildMatch);
+
+/* ---------- Org size selector (ตารางที่ 2.13) ---------- */
+const orgs=[
+ {nm:'วิสาหกิจชุมชน / Micro',emp:'< 20 คน',cyc:'2 ขั้นตอนอย่างง่าย',meet:'1 ครั้ง/เดือน',tool:'Excel Template',
+  note:'รวบข้อมูล + ประชุมตัดสินใจร่วมในเวทีเดียว — เน้นความสม่ำเสมอและข้อมูลชุดเดียว'},
+ {nm:'SME ขนาดเล็ก',emp:'20–100 คน',cyc:'3 ขั้นตอน',meet:'2–3 ครั้ง/เดือน',tool:'Excel + Google Sheets',
+  note:'เริ่มแยก Demand Review ออกจากการประชุมตัดสินใจ เพื่อให้ตัวเลขนิ่งก่อนถึงมือผู้บริหาร'},
+ {nm:'SME ขนาดกลาง',emp:'100–500 คน',cyc:'4–5 ขั้นตอนเต็มรูปแบบแบบกระชับ',meet:'4–5 ครั้ง/เดือน',tool:'Odoo / ERPNext + BI',
+  note:'ควรมี S&OP Process Owner เต็มบทบาท และเริ่มใช้ RCCP กับ Scenario อย่างเป็นระบบ'},
+ {nm:'องค์กรขนาดใหญ่',emp:'> 500 คน',cyc:'S&OP / IBP เต็มรูปแบบ',meet:'8–10 การประชุม/เดือน',tool:'SAP / Oracle + Planning Tools',
+  note:'วงจรครอบคลุมหลาย business unit และเชื่อมแผนการเงินเต็มรูปแบบ (แนวทาง IBP)'}
+];
+const orgSel=document.getElementById('orgSel'),orgDetail=document.getElementById('orgDetail');
+orgs.forEach((o,i)=>{
+  const b=document.createElement('button');b.textContent=o.nm;if(i===0)b.classList.add('active');
+  b.addEventListener('click',()=>{orgSel.querySelectorAll('button').forEach(x=>x.classList.remove('active'));b.classList.add('active');showOrg(i);});
+  orgSel.appendChild(b);
+});
+function showOrg(i){const o=orgs[i];
+  orgDetail.innerHTML=`<h3 style="color:var(--indigo);margin-bottom:8px">${o.nm} <span style="font-size:.85rem;color:var(--muted);font-family:'Sarabun'">(${o.emp})</span></h3>
+  <table><tr><th style="width:170px">มิติ</th><th>คำแนะนำ</th></tr>
+  <tr><td>วงจรที่แนะนำ</td><td>${o.cyc}</td></tr>
+  <tr><td>การประชุม</td><td>${o.meet}</td></tr>
+  <tr><td>เครื่องมือ</td><td>${o.tool}</td></tr>
+  <tr><td>ข้อสังเกต</td><td>${o.note}</td></tr></table>`;}
+showOrg(0);
+
+/* ---------- Quiz ---------- */
+const quiz=[
+ {q:'1) S&OP อยู่ในระดับใดของลำดับชั้นการวางแผนธุรกิจ และทำหน้าที่ใด',o:['ระดับสูงสุด — กำหนดทิศทาง 3–10 ปี','ระดับกลาง — เชื่อมแผนกลยุทธ์กับการดำเนินงานประจำวัน','ระดับล่าง — ควบคุมคำสั่งผลิตรายวัน','อยู่นอกลำดับชั้น — เป็นเพียงรายงานผู้บริหาร'],a:1,ex:'S&OP อยู่ระดับ 2 (กลาง) ทำหน้าที่เป็นกลไกเชื่อม "กลยุทธ์" กับ "การปฏิบัติ" ให้สอดคล้องกันอย่างเป็นระบบ (หัวข้อ 2.1)'},
+ {q:'2) เหตุใด S&OP จึงใช้หน่วยวางแผนระดับ "ตระกูลผลิตภัณฑ์" แทนราย SKU',o:['เพราะระบบ ERP ไม่รองรับข้อมูลราย SKU','เพราะการพยากรณ์ระดับรวมคลาดเคลื่อนต่ำกว่า และเหมาะกับการตัดสินใจเชิงบริหาร','เพราะกฎหมายกำหนดให้รายงานเป็นตระกูลสินค้า','เพราะ SKU ใช้เฉพาะในงานบัญชีเท่านั้น'],a:1,ex:'SKU มีจำนวนมากเกินกว่าผู้บริหารจะตัดสินใจทีละรายการ การพยากรณ์ระดับรวมแม่นยำกว่า และการวางแผนกำลังผลิตต้องการภาพรวม (หัวข้อ 2.1.3)'},
+ {q:'3) กระบวนการแปลงแผนจาก S&OP (ตระกูลสินค้ารายเดือน) ไปเป็น MPS (SKU รายสัปดาห์) เรียกว่าอะไร',o:['BOM Explosion','Scheduling','Disaggregation','Performance Feedback'],a:2,ex:'S&OP → MPS คือ Disaggregation ส่วน MPS → MRP คือ BOM Explosion และ MRP → Execution คือ Scheduling (ตารางที่ 2.2)'},
+ {q:'4) ลำดับของวงจร S&OP รายเดือน 5 ขั้นตอนข้อใดถูกต้อง',o:['Demand Review → Data Gathering → Supply Review → Executive → Pre-S&OP','Data Gathering → Demand Review → Supply Review → Pre-S&OP → Executive S&OP','Data Gathering → Supply Review → Demand Review → Executive → Pre-S&OP','Pre-S&OP → Demand Review → Supply Review → Data Gathering → Executive'],a:1,ex:'วงจรเริ่มจากเตรียมข้อมูล ทบทวนอุปสงค์ ทบทวนอุปทาน กลั่นกรอง (Pre-S&OP) แล้วจึงอนุมัติโดยผู้บริหาร (ตารางที่ 2.3)'},
+ {q:'5) ผลลัพธ์สำคัญที่สุดของขั้นตอน Demand Review คือข้อใด',o:['Approved S&OP Plan','Consensus Demand Plan','RCCP Results','S&OP Data Pack'],a:1,ex:'เป้าหมายสำคัญที่สุดของ Demand Review คือ Consensus Demand Plan ที่ทุกฝ่ายฝั่งอุปสงค์ยอมรับร่วมกัน (หัวข้อ 2.2.2)'},
+ {q:'6) ใน Demand Review หลักสำคัญของการปรับตัวเลขพยากรณ์คือข้อใด',o:['ปรับได้อิสระตามความเห็นของฝ่ายขาย','แยก Statistical Forecast กับ Judgment Adjustment และทุกการปรับต้องมีเหตุผลตรวจสอบย้อนกลับได้','ใช้ค่าจากโมเดลสถิติเท่านั้น ห้ามปรับ','ให้ผู้บริหารปรับเพียงคนเดียว'],a:1,ex:'ต้องแยกให้ชัดและบันทึกเหตุผล เช่น โปรโมชั่น ลูกค้าใหม่ เพื่อให้แผนมีที่มาชัดเจน (หัวข้อ 2.2.2)'},
+ {q:'7) Rough-Cut Capacity Planning (RCCP) ถูกใช้ในขั้นตอนใดและเพื่ออะไร',o:['Data Gathering — เพื่อทำความสะอาดข้อมูล','Supply Review — เพื่อเปรียบเทียบ Load กับ Capacity ระดับภาพรวมและหา bottleneck','Executive S&OP — เพื่ออนุมัติงบประมาณ','Demand Review — เพื่อพยากรณ์ยอดขาย'],a:1,ex:'RCCP เป็นเครื่องมือหลักของ Supply Review โดยไม่ต้องลงลึกระดับคำสั่งงานแบบ CRP (หัวข้อ 2.2.3)'},
+ {q:'8) หากไลน์ผลิตมี Capacity 320 ชม./เดือน และ Load จาก Demand Plan 350 ชม. Utilization และสถานะคือข้อใด',o:['91.4% — เฝ้าระวัง','109.4% — Overload','88.6% — ปกติ','120.0% — Overload'],a:1,ex:'Utilization = 350 ÷ 320 × 100 = 109.4% เกิน 100% จึงเป็น Overload ต้องหาทางเลือกแก้ gap (ตารางที่ 2.6)'},
+ {q:'9) องค์กรมีสินค้าคงคลังต้นงวด 200 หน่วย ผลิต 500 หน่วย ขาย 620 หน่วย สินค้าคงคลังปลายงวดเท่ากับเท่าใด',o:['80 หน่วย','120 หน่วย','320 หน่วย','−80 หน่วย'],a:0,ex:'Ending = 200 + 500 − 620 = 80 หน่วย (สมการ Inventory Balance หัวข้อ 2.3.1) — หากต่ำกว่าสต็อกเป้าหมายถือว่าเสี่ยง'},
+ {q:'10) หากองค์กรข้ามขั้นตอน Pre-S&OP ไป จะเกิดผลเสียสำคัญที่สุดข้อใดต่อ Executive S&OP',o:['ผู้บริหารต้องเสียเวลาค้นหาปัญหาและถกตัวเลขพื้นฐาน แทนที่จะมุ่งตัดสินใจเชิงกลยุทธ์','ระบบ ERP จะหยุดทำงาน','ฝ่ายขายจะไม่มีข้อมูลยอดขาย','ไม่มีผลเสีย เพราะ Pre-S&OP เป็นขั้นตอนเสริม'],a:0,ex:'Pre-S&OP กลั่นกรองปัญหา สร้าง scenario และเตรียมข้อเสนอ ทำให้ Executive S&OP มุ่งเน้นการตัดสินใจ (หัวข้อ 2.2.4)'},
+ {q:'11) "จัดโปรโมชั่นช่วงกำลังการผลิตว่าง ปรับราคา peak/off-peak เสนอสินค้าทดแทน" คือแนวทางใด',o:['Disaggregation','Demand Shaping','BOM Explosion','Cycle Adherence'],a:1,ex:'Demand Shaping คือการปรับรูปแบบความต้องการแทนการเพิ่ม supply ซึ่งบางครั้งต้นทุนต่ำกว่าและยืดหยุ่นกว่า (หัวข้อ 2.3.3)'},
+ {q:'12) วิสาหกิจชุมชน (พนักงาน < 20 คน) ควรเริ่มวงจร S&OP อย่างไรตามตารางที่ 2.13',o:['S&OP/IBP เต็มรูปแบบ 8–10 การประชุม/เดือน ด้วย SAP','วงจร 2 ขั้นตอนอย่างง่าย ประชุม 1 ครั้ง/เดือน ด้วย Excel Template','วงจร 4–5 ขั้นตอน ด้วย Odoo + BI','ไม่ควรทำ S&OP เพราะองค์กรเล็กเกินไป'],a:1,ex:'วิสาหกิจชุมชนเริ่มจาก 2 ขั้นตอนอย่างง่าย ประชุมเดือนละครั้ง ใช้ Excel — หลักสำคัญคือความสม่ำเสมอและการใช้ข้อมูลร่วมกัน (ตารางที่ 2.13)'}
+];
+const quizBox=document.getElementById('quizBox');let answered=0,scored=0;
+function buildQuiz(){
+  answered=0;scored=0;quizBox.innerHTML='';
+  document.getElementById('scoreBox').className='score-box';
+  quiz.forEach((it,qi)=>{
+    const d=document.createElement('div');d.className='q';
+    d.innerHTML=`<div class="qt">${it.q}</div>`+it.o.map((o,oi)=>`<button class="qo" data-oi="${oi}">${['ก','ข','ค','ง'][oi]}. ${o}</button>`).join('')+`<div class="fb"></div>`;
+    d.querySelectorAll('.qo').forEach(b=>b.addEventListener('click',()=>{
+      d.querySelectorAll('.qo').forEach(x=>x.disabled=true);
+      const ok=+b.dataset.oi===it.a;
+      b.classList.add(ok?'correct':'incorrect');
+      d.querySelectorAll('.qo')[it.a].classList.add('correct');
+      const fb=d.querySelector('.fb');fb.className='fb show '+(ok?'good':'bad');
+      fb.innerHTML=(ok?'✔ ถูกต้อง — ':'✘ ยังไม่ถูก — ')+it.ex;
+      answered++;if(ok)scored++;
+      if(answered===quiz.length)showScore();
+    }));
+    quizBox.appendChild(d);
+  });
+}
+function showScore(){
+  const s=document.getElementById('scoreBox');s.className='score-box show';
+  const pct=Math.round(scored/quiz.length*100);
+  let msg = pct>=80?'ยอดเยี่ยม! พร้อมต่อยอดสู่บทที่ 3 การให้ข้อมูลผู้บริหารและ RACI Matrix':(pct>=60?'ดี — แนะนำทบทวนวงจร 5 ขั้นตอนและตรรกะ gap อีกครั้ง':'ควรกลับไปทบทวนเนื้อหาบทที่ 2 โดยเฉพาะแท็บวงจร S&OP และตรรกะ Demand–Supply');
+  s.innerHTML=`<div>คะแนนของคุณ</div><div class="big">${scored} / ${quiz.length}</div><div>(${pct}%) — ${msg}</div>`;
+  s.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+buildQuiz();
+document.getElementById('qReset').addEventListener('click',buildQuiz);
+</script>
+</body>
+</html>
